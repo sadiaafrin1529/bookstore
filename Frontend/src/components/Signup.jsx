@@ -1,8 +1,13 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Login from './Login';
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from 'react-hot-toast';
 function Signup() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/"
    const {
      register,
      handleSubmit,
@@ -10,7 +15,31 @@ function Signup() {
      formState: { errors },
    } = useForm();
 
-   const onSubmit = (data) => console.log(data);
+  const onSubmit =async (data) => {
+     const userinfo = {
+       fullname: data.fullname,
+       email: data.email,
+       password:data.password
+    }
+    await axios .post("http://localhost:4000/user/signup", userinfo)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          // alert("Signup Sucessfully");
+          toast.success("Signup Sucessfully");
+          navigate(from,{replace:true});
+          
+        }
+        localStorage.setItem("User", JSON.stringify(res.data.user));
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.log(error);
+          // alert("Error:" + error.response.data.message);
+            toast.error("Error:" + error.response.data.message);
+        }
+      });
+   }
   return (
     <>
       <div className="flex h-screen items-center justify-center">
@@ -64,7 +93,7 @@ function Signup() {
                 <span>Password</span>
                 <br />
                 <input
-                  type="text"
+                  type="password"
                   placeholder="Enter your password"
                   className="w-80 px-3 py-1 border rounded-md outline-none"
                   {...register("password", { required: true })}
