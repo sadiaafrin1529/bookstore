@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -10,21 +9,20 @@ import axios from "axios";
 import Cards from "./Cards";
 
 function FreeBook() {
-  const [book, setBook] = useState([])
+  const [book, setBook] = useState([]);
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios("http://localhost:4000/book");
+        const res = await axios(`${import.meta.env.VITE_LIVE_URL}/book`);
         // console.log(res.data)
         const data = res.data.filter((data) => data.category === "free");
-        setBook(data)
+        setBook(data);
+      } catch (error) {
+        console.log("error", error);
       }
-      catch (error) {
-        console.log("error",error)
-      }
-    }
+    };
     getBook();
-  },[])
+  }, []);
   // const filterData = List.filter((data) => data.category === "free");
   // console.log(filterData)
   var settings = {

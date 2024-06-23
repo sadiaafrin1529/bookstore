@@ -18,17 +18,17 @@ function Login() {
        email: data.email,
        password:data.password
     }
-    await axios .post("http://localhost:4000/user/login", userinfo)
+    await axios
+      .post(`${import.meta.env.VITE_LIVE_URL}/user/login`, userinfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {
           toast.success("Login Sucessfully");
           document.getElementById("my_modal_3").close();
           setTimeout(() => {
-            
             window.location.reload();
             localStorage.setItem("User", JSON.stringify(res.data.user));
-          },1000)
+          }, 1000);
           // document.getElementById("my_modal_3").close();
           // window.location.reload()
           // alert("Login Sucessfully");
@@ -40,7 +40,7 @@ function Login() {
           console.log(error);
           // alert("Error:" + error.response.data.message);
           toast.error("Error:" + error.response.data.message);
-          setTimeout(()=>{},2000)
+          setTimeout(() => {}, 2000);
         }
       });
   }
